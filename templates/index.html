@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="bg-white container">
+    <form id="image_form" action="/generate" method = "POST">
+        <div class="pt-4 mb-3 d-flex justify-content-center">
+            <div class="col-auto m-3">
+                <select name="model_selector" id="model_selector" class="form-select" aria-label="Default select example">
+                    <option selected>Select the number of epoches of generator</option>
+                    <option value="1" class="form-select" aria-label="Default select example">1</option>
+                    <option value="10" class="form-select" aria-label="Default select example">10</option>
+                    <option value="50" class="form-select" aria-label="Default select example">50</option>
+                    <option value="100" class="form-select" aria-label="Default select example">100</option>
+                    <option value="500" class="form-select" aria-label="Default select example">500</option>
+                    <option value="1000" class="form-select" aria-label="Default select example">1000</option>
+                    <option value="2000" class="form-select" aria-label="Default select example">2000</option>
+                </select>
+            </div>
+            <div class="col-auto m-3">
+                <button type="submit" form="image_form" value="Generate" class="btn btn-primary">Generate</button>
+            </div>
+        </div>
+    </form>
+    
+    <div id="info">
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $("#image_form select").change(function(){
+            $("#info").empty();
+        });
+    });
+
+    $(document).ready(function(){
+        $("#image_form").on("submit", function(e){
+            $("#info").empty();
+            e.preventDefault();
+            var form_data = new FormData($("#image_form")[0])
+            $.ajax({
+                type:'POST',
+                url:'/generate',
+                cache:false,
+                data:form_data,
+                processData:false,
+                contentType:false,
+                dataType:false,
+                success: function(data){
+                    $("#info").empty();
+                    $("#info").html(data);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
